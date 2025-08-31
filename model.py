@@ -51,31 +51,31 @@ class Embeddings (nn.Module) :
     return x
   
 
-class AttentionHead (nn.Module):
+class AttentionHead(nn.Module):
+    def __init__(self, hidden_size, attention_head_size, dropout, bias=True):
+        super().__init__()
+        self.hidden_size = hidden_size
+        self.attention_head_size = attention_head_size
 
-  def __init__(self,hidden_size,attention_head_size,dropout,bias = True):
-    super().__init__()
-    self.hidden_size = hidden_size
-    self.attention_head_size = attention_head_size
+        self.query = nn.Linear(hidden_size, attention_head_size, bias=bias)
+        self.key = nn.Linear(hidden_size, attention_head_size, bias=bias)
+        self.value = nn.Linear(hidden_size, attention_head_size, bias=bias)
 
-    self.query = nn.Linear(hidden_size , attention_head_size , bias  = bias)
-    self.key = nn.Linear(hidden_size , attention_head_size , bias  = bias)
-    self.value = nn.Linear(hidden_size , attention_head_size , bias  = bias)
+        self.dropout = nn.Dropout(dropout)
 
-    self.dropout = nn.Dropout(dropout)
+    def forward(self, x):
+        query = self.query(x)
+        key = self.key(x)
+        value = self.value(x)
+        affinity_score = torch.matmul(query, key.transpose(-1, -2))
 
+        scale_factor = self.attention_head_size ** 0.5
+        affinity_score = affinity_score / scale_factor
+       
 
-  def forward(self , x) :
-    query = self.query(x)
-    key  = self.key(x)
-    value = self.value(x)
-    affinity_score = torch.matmul(query,key.transpose(-1,-2))
-    affinity_score = affinity_score / torch.sqrt(torch.tensor(self.attention_head_size))
-    attention_prob = nn.functional.softmax(affinity_score, dim = -1 )
-    attention_prob = self.dropout(attention_prob)
-    return torch.matmul(attention_prob,value)
-
-
+        attention_prob = nn.functional.softmax(affinity_score, dim=-1)
+        attention_prob = self.dropout(attention_prob)
+        return torch.matmul(attention_prob, value)
 
 class MultiHeadAttention(nn.Module):
 

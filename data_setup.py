@@ -1,31 +1,30 @@
+# data_setup.py
 
 import torch
-from torchvision.datasets import OxfordIIITPet
-from torch.utils.data import DataLoader, random_split
-from torchvision.transforms import Compose, Resize, ToTensor, Normalize
+from torchvision.datasets import CIFAR100
+from torch.utils.data import DataLoader
 
+def create_dataloaders(train_transform, test_transform, batch_size):
+    """Creates training and testing DataLoaders for CIFAR-100."""
+    
+    # Load the CIFAR-100 dataset using the standard splits
+    train_dataset = CIFAR100(root='./data', train=True, transform=train_transform, download=True)
+    test_dataset = CIFAR100(root='./data', train=False, transform=test_transform, download=True)
 
-
-def create_dataloaders(transform, batch_size):
-    """Creates training and testing DataLoaders."""
-    # Download and load the dataset
-    dataset = OxfordIIITPet(root='./data', transform=transform, download=True)
-
-    # Split the dataset
-    train_size = int(0.8 * len(dataset))
-    test_size = len(dataset) - train_size
-    train_dataset, test_dataset = random_split(dataset, [train_size, test_size])
-
-    # Create the DataLoaders
+    # Create the DataLoaders    
     train_dataloader = DataLoader(
         train_dataset,
         batch_size=batch_size,
-        shuffle=True
+        shuffle=True,
+        
+        pin_memory=True
     )
     test_dataloader = DataLoader(
         test_dataset,
         batch_size=batch_size,
-        shuffle=False
+        shuffle=False,
+        
+        pin_memory=True
     )
-    
-    return train_dataloader, test_dataloader, dataset.classes
+
+    return train_dataloader, test_dataloader, train_dataset.classes

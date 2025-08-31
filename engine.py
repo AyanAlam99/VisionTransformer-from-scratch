@@ -70,25 +70,23 @@ def test_step(model: nn.Module,
         return test_loss, test_acc
 
 
-# Add this function to your engine.py file
 
-def train(model: nn.Module,
-          train_dataloader: torch.utils.data.DataLoader,
-          test_dataloader: torch.utils.data.DataLoader,
-          optimizer: torch.optim.Optimizer,
-          loss_fn: nn.Module,
+
+def train(model,
+          train_dataloader,
+          test_dataloader,
+          optimizer,
+          loss_fn,
           accuracy_func,
-          epochs: int,
-          device: torch.device):
-    """The main training loop that calls train_step and test_step."""
-    
-    # Create a dictionary to store results
-    results = {"train_loss": [],
-               "train_acc": [],
-               "test_loss": [],
-               "test_acc": []}
+          epochs,
+          device):
+    """The main training loop with detailed logging."""
 
-    # Loop through training and testing steps for a number of epochs
+    results = {"train_loss": [], "train_acc": [], "test_loss": [], "test_acc": []}
+
+    print("🚀 Starting training...")
+    print("-" * 60)
+
     for epoch in tqdm(range(epochs)):
         train_loss, train_acc = train_step(model=model,
                                            dataloader=train_dataloader,
@@ -96,30 +94,23 @@ def train(model: nn.Module,
                                            optimizer=optimizer,
                                            accuracy_func=accuracy_func,
                                            device=device)
-        
+
         test_loss, test_acc = test_step(model=model,
                                         dataloader=test_dataloader,
                                         loss_fn=loss_fn,
                                         accuracy_func=accuracy_func,
                                         device=device)
 
-        # Print out what's happening
-        print(
-          f"Epoch: {epoch+1} | "
-          f"Train Loss: {train_loss:.4f} | "
-          f"Train Acc: {train_acc:.4f} | "
-          f"Test Loss: {test_loss:.4f} | "
-          f"Test Acc: {test_acc:.4f}"
-        )
+        # --- DETAILED LOGGING ---
+        print(f"Epoch: {epoch+1:02d}")
+        print(f"\tTrain Loss: {train_loss:.5f} | Train Acc: {train_acc*100:.2f}%")
+        print(f"\tTest Loss:  {test_loss:.5f} | Test Acc:  {test_acc*100:.2f}%")
+        print("-" * 60)
 
-        # Update results dictionary
         results["train_loss"].append(train_loss)
         results["train_acc"].append(train_acc)
         results["test_loss"].append(test_loss)
         results["test_acc"].append(test_acc)
 
+    print("✅ Training finished.")
     return results
-
-
-
-

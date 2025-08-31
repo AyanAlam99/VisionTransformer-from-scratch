@@ -1,19 +1,23 @@
-config = {
-    "patch_size": 8,
-    "hidden_size": 48,
-    "num_hidden_layers": 4,
-    "num_attention_heads": 4,
-    "intermediate_size": 4 * 48,
-    "hidden_dropout_prob": 0.0,
-    "attention_probs_dropout_prob": 0.0,
+# config.py
+
+Config = {
+    
+    "patch_size": 8,            # Patch size of 8x8 pixels
+    "hidden_size": 192,         
+    "num_hidden_layers": 6,     
+    "num_attention_heads": 6,   # Number of attention heads
+    "intermediate_size": 4 * 192, # 4x the hidden size
+    "hidden_dropout_prob": 0.1, # Add dropout for regularization
+    "attention_probs_dropout_prob": 0.1,
     "initializer_range": 0.02,
-    "image_size": 144,
-    "num_classes": 37,
+    "image_size": 64,           
+    "num_classes": 100,         # CIFAR-100 has 100 classes
     "num_channels": 3,
     "qkv_bias": True,
-    # Training-specific configs
-    "batch_size": 32,
-    "num_epochs": 10,
+    
+    
+    "batch_size": 64,           
+    "num_epochs": 10,           
     "learning_rate": 3e-4,
-    "weight_decay": 0.01
+    "weight_decay": 0.05,       
 }
