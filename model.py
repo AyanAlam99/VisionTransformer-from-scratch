@@ -32,7 +32,7 @@ class Embeddings (nn.Module) :
     self.patch_embeddings = PatchEmbeding(config)
     #add a cls token which is a learnable parameter , it will be use to classify the entire sequence
     self.cls_token = nn.Parameter(torch.randn(1,1,config["hidden_size"]))
-    self.positional_embeddings= nn.Parameter(torch.randn(1,self.patch_embeddings.num_patches+1 , config["hidden_size"])) #You are adding 1 to the count of image patches to create the correct number of position embeddings for the entire input sequence.
+    self.positional_embeddings= nn.Parameter(torch.randn(1,self.patch_embeddings.num_patches+1 , config["hidden_size"])) # adding 1 to the count of image patches to create the correct number of position embeddings for the entire input sequence.
     self.dropout = nn.Dropout(config["hidden_dropout_prob"])
 
   def forward(self , x) :

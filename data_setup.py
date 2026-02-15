@@ -7,11 +7,9 @@ from torch.utils.data import DataLoader
 def create_dataloaders(train_transform, test_transform, batch_size):
     """Creates training and testing DataLoaders for CIFAR-100."""
     
-    # Load the CIFAR-100 dataset using the standard splits
     train_dataset = CIFAR100(root='./data', train=True, transform=train_transform, download=True)
     test_dataset = CIFAR100(root='./data', train=False, transform=test_transform, download=True)
-
-    # Create the DataLoaders    
+  
     train_dataloader = DataLoader(
         train_dataset,
         batch_size=batch_size,

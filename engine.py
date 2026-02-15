@@ -80,11 +80,11 @@ def train(model,
           accuracy_func,
           epochs,
           device):
-    """The main training loop with detailed logging."""
+
 
     results = {"train_loss": [], "train_acc": [], "test_loss": [], "test_acc": []}
 
-    print("🚀 Starting training...")
+    print("Starting training...")
     print("-" * 60)
 
     for epoch in tqdm(range(epochs)):
@@ -112,5 +112,5 @@ def train(model,
         results["test_loss"].append(test_loss)
         results["test_acc"].append(test_acc)
 
-    print("✅ Training finished.")
+    print(" Training finished.")
     return results
