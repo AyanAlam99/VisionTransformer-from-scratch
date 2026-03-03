@@ -23,8 +23,13 @@ def train_step(model: nn.Module,
             loss = loss_fn(y_pred_logits, y)
             train_loss += loss.item()
 
+            # Handle accuracy calculation for both hard and soft labels
             y_pred_class = torch.argmax(y_pred_logits, dim=1)
-            train_acc += accuracy_func(y_pred_class, y).item()
+            
+            # If y is 2D (soft labels from Mixup/Cutmix), convert to 1D class indices for accuracy calculation
+            y_true_class = torch.argmax(y, dim=1) if y.ndim == 2 else y
+            
+            train_acc += accuracy_func(y_pred_class, y_true_class).item()
 
             # 3. Optimizer zero grad
             optimizer.zero_grad()
@@ -72,14 +77,8 @@ def test_step(model: nn.Module,
 
 
 
-def train(model,
-          train_dataloader,
-          test_dataloader,
-          optimizer,
-          loss_fn,
-          accuracy_func,
-          epochs,
-          device):
+def train(model, train_dataloader , test_dataloader,optimizer,loss_fn,accuracy_func ,epochs,device , scheduler=None ) :
+          
 
 
     results = {"train_loss": [], "train_acc": [], "test_loss": [], "test_acc": []}
@@ -100,7 +99,14 @@ def train(model,
                                         loss_fn=loss_fn,
                                         accuracy_func=accuracy_func,
                                         device=device)
+        
+        if scheduler is not None:
+            scheduler.step() # Step the scheduler after each epoch
+            current_lr = scheduler.get_last_lr()[0]
+        else:
+            current_lr = optimizer.param_groups[0]['lr']
 
+    
         # --- DETAILED LOGGING ---
         print(f"Epoch: {epoch+1:02d}")
         print(f"\tTrain Loss: {train_loss:.5f} | Train Acc: {train_acc*100:.2f}%")

@@ -169,6 +169,7 @@ class VitForClassification(nn.Module):
 
     self.embeddings = Embeddings(config)
     self.encoder = Encode(config)
+    self.final_norm = nn.LayerNorm(self.hidden_size)
     self.classification_head  =  nn.Linear(self.hidden_size,self.num_classes)
     self.apply(self._init_weights)
 
@@ -195,6 +196,7 @@ class VitForClassification(nn.Module):
     embedding_out = self.embeddings(x)
     encoder_out = self.encoder(embedding_out)
     cls_token_out = encoder_out[:,0]
+    cls_token_out = self.final_norm(cls_token_out)
     logits = self.classification_head(cls_token_out)
     return logits
 

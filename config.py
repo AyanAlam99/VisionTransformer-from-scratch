@@ -17,7 +17,7 @@ Config = {
     
     
     "batch_size": 64,           
-    "num_epochs": 10,           
+    "num_epochs": 200,           
     "learning_rate": 3e-4,
-    "weight_decay": 0.05,       
+    "weight_decay": 0.2,       
 }
