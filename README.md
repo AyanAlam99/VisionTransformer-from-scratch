@@ -4,14 +4,14 @@ This repository contains a complete, from-scratch PyTorch implementation of the 
 
 Training a ViT from scratch on a small dataset like CIFAR-100 is notoriously difficult because Transformers lack the spatial inductive biases (like translation invariance and locality) inherent to Convolutional Neural Networks (CNNs). This project demonstrates how to overcome the subsequent severe overfitting using aggressive regularization and modern data augmentation techniques.
 
-## 🧠 Model Architecture
+##  Model Architecture
 The architecture strictly follows the original ViT design principles, implemented completely from scratch:
 * **Patch Embeddings:** Images are broken down into patches (8x8) and linearly projected into a 192-dimensional hidden space.
 * **CLS Token & Positional Embeddings:** Learnable parameters added to sequence representations.
 * **Transformer Encoder:** 6 hidden layers with Multi-Head Self-Attention (6 heads).
 * **Classification Head:** MLP head mapping the output of the CLS token to 100 classes.
 
-## 🛠️ Training Strategy & Regularization
+##  Training Strategy & Regularization
 To combat the ViT's tendency to memorize small datasets, the training pipeline utilizes a heavy regularization scheme:
 * **MixUp & CutMix Augmentations:** Implemented at the batch level via `torchvision.transforms.v2`. This forces the model to learn soft probability distributions rather than hard labels, effectively destroying the capacity to memorize pixel patterns.
 * **Label Smoothing:** Applied to the Cross-Entropy Loss (`label_smoothing=0.1`) to prevent overconfidence.
