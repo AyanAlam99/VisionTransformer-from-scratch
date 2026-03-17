@@ -43,12 +43,12 @@ This makes training ViT from scratch on small datasets like CIFAR-100 notoriousl
 Built entirely from scratch using `torch.nn` — no HuggingFace, no timm, no shortcuts.
 
 ```
-Input Image (3 × 32 × 32)
+Input Image (3 × 64 × 64)
         │
         ▼
 ┌───────────────────────────────────┐
 │        Patch Embedding            │
-│  8×8 patches → 16 tokens         │
+│  8×8 patches → 64 tokens         │
 │  Linear projection → dim 192      │
 └───────────────┬───────────────────┘
                 │
